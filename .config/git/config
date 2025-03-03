@@ -1,0 +1,38 @@
+[init]
+    defaultBranch = main
+[user]
+    email = nxblnd@desktop.localdomain
+    name = Pavel Egorov
+[branch]
+    sort = -committerdate
+[commit]
+    gpgsign = false
+    verbose = true
+[tag]
+    sort = version:refname
+    gpgsign = false
+[gpg]
+    format = openpgp
+[fetch]
+    all = true
+[diff]
+    algorithm = histogram
+    renames = copies
+    colorsMoved = plain
+    mnemonicPrefix = true
+[merge]
+    ff = false
+    conflictStyle = zdiff3
+[push]
+    default = simple
+    autoSetupRemote = true
+    followTags = true
+[pull]
+    rebase = true
+[format]
+    pretty = "format:%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic brightblack)by %an (%cr)%C(reset)"
+[filter "lfs"]
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
