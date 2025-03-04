@@ -1,5 +1,7 @@
 [init]
     defaultBranch = main
+[core]
+    editor = nvim
 [user]
     email = nxblnd@desktop.localdomain
     name = Pavel Egorov
