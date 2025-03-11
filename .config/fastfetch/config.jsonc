@@ -175,7 +175,7 @@
     },
     {
       "type": "battery",
-      "key": "{$6}├─{#0}  Battery"
+      "key": "{$6}├─{#0} {$6}Battery"
     },
     {
       "type": "display",
