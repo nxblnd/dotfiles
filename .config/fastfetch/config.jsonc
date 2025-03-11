@@ -1,34 +1,223 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "padding": {
+      "left": 3,
+      "right": 3,
+      "top": 3
+    }
+  },
+  "display": {
+    "constants": [
+      "\u001b[38;2;0;255;0m", // Software color = 1
+      "\u001b[38;2;0;255;60m", // OS color = 2
+      "\u001b[38;2;0;255;120m", // Terminal color = 3
+      "\u001b[38;2;0;255;180m", // DE color = 4
+      "\u001b[38;2;0;255;240m", // Development color = 5
+      "\u001b[38;2;255;255;0m", // Hardware color = 6
+      "\u001b[38;2;255;180;0m", // Chassis color = 7
+      "\u001b[38;2;195;120;225m" // Misc info color = 8
+    ]
+  },
   "modules": [
-    "title",
-    "separator",
-    "os",
-    "host",
-    "kernel",
-    "uptime",
-    "packages",
-    "shell",
-    "display",
-    "de",
-    "wm",
-    "wmtheme",
-    "theme",
-    "icons",
-    "font",
-    "cursor",
-    "terminal",
-    "terminalfont",
-    "cpu",
-    "gpu",
-    "memory",
-    "swap",
-    "disk",
-    "localip",
-    "battery",
-    "poweradapter",
-    "locale",
+    // 1 Software
+    {
+      "type": "custom",
+      "key": "{$1}Software"
+    },
+    // 1.1 OS
+    {
+      "type": "os",
+      "key": "{$1}├─{#0} {$2}OS"
+    },
+    {
+      "type": "bootmgr",
+      "key": "{$1}│{#0}  {$2}├─ Boot",
+      "format": "{name}"
+    },
+    {
+      "type": "initsystem",
+      "key": "{$1}│{#0}  {$2}├─ Init"
+    },
+    {
+      "type": "kernel",
+      "key": "{$1}│{#0}  {$2}├─ Kernel"
+    },
+    {
+      "type": "packages",
+      "key": "{$1}│{#0}  {$2}└─ Packages"
+    },
+
+    // 1.2 Terminal
+    {
+      "type": "terminal",
+      "key": "{$1}├─{#0} {$3}Terminal"
+    },
+    {
+      "type": "terminalfont",
+      "key": "{$1}│{#0}  {$3}├─ Font"
+    },
+    {
+      "type": "shell",
+      "key": "{$1}│{#0}  {$3}└─ Shell"
+    },
+
+    // 1.3 DE
+    {
+      "type": "de",
+      "key": "{$1}├─{#0} {$4}DE"
+    },
+    {
+      "type": "lm",
+      "key": "{$1}│{#0}  {$4}├─ LM"
+    },
+    {
+      "type": "icons",
+      "key": "{$1}│{#0}  {$4}├─ Icons"
+    },
+    {
+      "type": "cursor",
+      "key": "{$1}│{#0}  {$4}├─ Cursor"
+    },
+    {
+      "type": "font",
+      "key": "{$1}│{#0}  {$4}├─ Font"
+    },
+    {
+      "type": "icons",
+      "key": "{$1}│{#0}  {$4}├─ Icons"
+    },
+    {
+      "type": "theme",
+      "key": "{$1}│{#0}  {$4}└─ Theme"
+    },
+    // 1.4 Development
+    {
+      "type": "custom",
+      "key": "{$1}└─{#0} {$5}Development"
+    },
+    {
+      "type": "editor",
+      "key": "{#0}   {$5}├─ Editor"
+    },
+    {
+      "type": "command",
+      "key": "{#0}   {$5}├─ Git",
+      "text": "git --version",
+      "format": "{~12}"
+    },
+    {
+      "type": "command",
+      "key": "{#0}   {$5}├─ Python",
+      "text": "python --version",
+      "format": "{~7}"
+    },
+    {
+      "type": "command",
+      "key": "{#0}   {$5}├─ GCC",
+      "text": "gcc --version | head -1 | cut -d ' ' -f 3",
+      "format": "{}"
+    },
+    {
+      "type": "command",
+      "key": "{#0}   {$5}├─ Clang",
+      "text": "clang --version | head -1 | cut -d ' ' -f 3",
+      "format": "{}"
+    },
+    {
+      "type": "command",
+      "key": "{#0}   {$5}└─ NodeJS",
+      "text": "node --version",
+      "format": "{~1}"
+    },
+
     "break",
-    "colors"
+
+    // 2 Hardware
+    {
+      "type": "custom",
+      "key": "{$6}Hardware"
+    },
+    // 2.1 Chassis
+    {
+      "type": "chassis",
+      "key": "{$6}├─{#0} {$7}Chassis"
+    },
+    {
+      "type": "board",
+      "key": "{$6}│{#0}  {$7}├─ Board"
+    },
+    {
+      "type": "cpu",
+      "key": "{$6}│{#0}  {$7}├─ CPU"
+    },
+    {
+      "type": "gpu",
+      "key": "{$6}│{#0}  {$7}├─ GPU",
+      "format": "[{type}] {vendor} {name}"
+    },
+    {
+      "type": "gpu",
+      "key": "{$6}│{#0}  {$7}│  └─ Driver",
+      "format": "{driver}"
+    },
+    {
+      "type": "disk",
+      "key": "{$6}│{#0}  {$7}├─ Disk"
+    },
+    {
+      "type": "memory",
+      "key": "{$6}│{#0}  {$7}└─ RAM"
+    },
+    {
+      "type": "swap",
+      "key": "{$6}│{#0}     {$7}└─ Swap"
+    },
+    {
+      "type": "battery",
+      "key": "{$6}├─{#0}  Battery"
+    },
+    {
+      "type": "display",
+      "key": "{$6}└─{#0} {$6}Display"
+    },
+
+    "break",
+
+    // Miscellaneous information
+    {
+      "type": "custom",
+      "key": "{$8}Miscellaneous information"
+    },
+    {
+      "type": "datetime",
+      "key": "{$8}├─{#0} {$8}Date & Time"
+    },
+    {
+      "type": "uptime",
+      "key": "{$8}├─{#0} {$8}Uptime"
+    },
+    {
+      "type": "disk",
+      "key": "{$8}├─{#0} {$8}OS Age",
+      "folders": "/",
+      "format": "{days} days"
+    },
+    {
+      "type": "media",
+      "key": "{$8}├─{#0} {$8}Now playing"
+    },
+    {
+      "type": "version",
+      "key": "{$8}└─{#0} {$8}Fastfetch",
+      "format": "{version}"
+    },
+
+    // Helps with last comma
+    "break",
+    {
+      "type": "colors",
+      "symbol": "star"
+    }
   ]
 }
