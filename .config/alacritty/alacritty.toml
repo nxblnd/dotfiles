@@ -1,0 +1,27 @@
+[general]
+
+[window]
+opacity = 0.85
+dynamic_title = true
+
+[window.dimensions]
+columns = 150
+lines = 50
+
+[scrolling]
+history = 2500
+
+[font]
+size = 11
+
+[font.normal]
+family = 'FantasqueSansM Nerd Font Mono'
+style = 'Regular'
+
+[cursor]
+style.shape = 'Block'
+unfocused_hollow = true
+
+[mouse]
+hide_when_typing = true
+
