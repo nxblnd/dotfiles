@@ -144,6 +144,11 @@
       "key": "{$6}├─{#0} {$7}Chassis"
     },
     {
+      "type": "host",
+      "key": "{$6}│{#0}  {$7}├─ Host",
+      "format": "{vendor} {name}"
+    },
+    {
       "type": "board",
       "key": "{$6}│{#0}  {$7}├─ Board"
     },
