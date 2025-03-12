@@ -201,7 +201,7 @@
       "type": "disk",
       "key": "{$8}├─{#0} {$8}OS Age",
       "folders": "/",
-      "format": "{days} days"
+      "format": "{days} days (since {create-time:10})"
     },
     {
       "type": "media",
