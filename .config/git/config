@@ -3,7 +3,7 @@
 [core]
     editor = nvim
 [user]
-    email = nxblnd@desktop.localdomain
+    email = contact@pavelegorov.xyz
     name = Pavel Egorov
 [branch]
     sort = -committerdate
