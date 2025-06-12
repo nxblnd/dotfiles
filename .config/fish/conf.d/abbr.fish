@@ -10,3 +10,7 @@ abbr --add gco "git checkout"
 set SSPROXY 'socks5://localhost:1080'
 abbr --add curlss "curl --proxy=$SSPROXY"
 abbr --add ytdlpss "yt-dlp --proxy=$SSPROXY"
+
+# Pacman
+abbr --add pacman-unlock "sudo rm /var/lib/pacman/db.lck"
+abbr --add pacman-orphans "pacman -Qdtq | sudo pacman -Rns -"
