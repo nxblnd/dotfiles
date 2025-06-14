@@ -64,7 +64,7 @@ set tarball "$_flag_name.tar"
 set files $argv
 
 if contains $_flag_format $compressor_formats
-    if test (count $files) -gt 1
+    if test (count $files) -gt 1 -o -d $files
         echo "Too many files, packing with tar first" >&2
         create_tarball
         set _flag_name $tarball
