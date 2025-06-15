@@ -7,7 +7,8 @@ abbr --add ga "git add"
 abbr --add gco "git checkout"
 
 # Added proxy flags
-set SSPROXY 'socks5://localhost:1080'
+set -l ssconfig "/etc/shadowsocks-rust/config.json"
+set -l SSPROXY "socks5://$(jq -r .local_address $ssconfig):$(jq -r .local_port $ssconfig)"
 abbr --add curlss "curl --proxy=$SSPROXY"
 abbr --add ytdlpss "yt-dlp --proxy=$SSPROXY"
 
