@@ -18,3 +18,6 @@ end
 # Pacman
 abbr --add pacman-unlock "sudo rm /var/lib/pacman/db.lck"
 abbr --add pacman-orphans "pacman -Qdtq | sudo pacman -Rns -"
+
+# Docker
+abbr --add docker-shell "docker run --rm -it --entrypoint /bin/sh"
