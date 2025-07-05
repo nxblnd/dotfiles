@@ -21,3 +21,5 @@ abbr --add pacman-orphans "pacman -Qdtq | sudo pacman -Rns -"
 
 # Docker
 abbr --add docker-shell "docker run --rm -it --entrypoint /bin/sh"
+abbr --add docker-connect --set-cursor "docker exec -it % /bin/sh"
+
