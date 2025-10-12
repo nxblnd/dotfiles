@@ -10,6 +10,9 @@
 [commit]
     gpgsign = false
     verbose = true
+[rerere]
+    enabled = true
+    autoupdate = true
 [tag]
     sort = version:refname
     gpgsign = false
@@ -43,3 +46,5 @@
     insteadOf = "https://github.com/"
 [url "git@github.com:nxblnd/"]
     insteadOf = "my:"
+[help]
+    autocorrect = prompt
