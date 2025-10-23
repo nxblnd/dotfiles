@@ -5,17 +5,18 @@
 [user]
     email = contact@pavelegorov.xyz
     name = Pavel Egorov
+    signingkey = A6CFFB0E8BBB7DDD
 [branch]
     sort = -committerdate
 [commit]
-    gpgsign = false
+    gpgsign = true
     verbose = true
 [rerere]
     enabled = true
     autoupdate = true
 [tag]
     sort = version:refname
-    gpgsign = false
+    gpgsign = true
 [gpg]
     format = openpgp
 [fetch]
@@ -43,7 +44,7 @@
     smudge = git-lfs smudge -- %f
 [url "git@github.com:"]
     insteadOf = "gh:"
-    insteadOf = "https://github.com/"
+    pushInsteadOf = "https://github.com/"
 [url "git@github.com:nxblnd/"]
     insteadOf = "my:"
 [help]
