@@ -9,3 +9,10 @@ if type -q eza
     end
 end
 
+function goto
+    if test -d $argv[1]
+        cd $argv[1]
+    end
+
+    mkdir -p $argv[1] && cd $argv[1]
+end
