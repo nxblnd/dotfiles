@@ -1,11 +1,11 @@
 # ls & alternatives
 if type -q eza
     function ls --wraps eza
-        eza --long --almost-all --binary --smart-group --group-directories-first --git --git-repos --color=auto --icons=never
+        eza --long --almost-all --binary --smart-group --group-directories-first --git --git-repos --color=auto --icons=never $argv
     end
 
     function lss --wraps eza --description "ls with total dir size"
-        ls --total-size
+        ls --total-size $argv
     end
 end
 
