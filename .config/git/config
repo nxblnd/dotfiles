@@ -49,3 +49,5 @@
     insteadOf = "my:"
 [help]
     autocorrect = prompt
+[includeIf "gitdir:~/workspace/extra/"]
+    path = ~/workspace/extra/.gitconfig
