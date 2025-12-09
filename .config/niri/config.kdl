@@ -18,6 +18,7 @@ include "windows.kdl"
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "waybar"
 spawn-at-startup "dunst"
+spawn-at-startup "swaybg" "--image" "/usr/share/wallpapers/Nuvole/contents/images/5120x2880.png"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
