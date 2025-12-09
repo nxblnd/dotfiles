@@ -1,3 +1,6 @@
+workspace "main"
+workspace "games"
+
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Window-Rules
@@ -16,6 +19,12 @@ window-rule {
 
     open-floating true
     default-floating-position x=32 y=32 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id=r#"firefox"# title="Choose User Profile"
+
+    open-floating true
 }
 
 window-rule {
@@ -39,3 +48,14 @@ window-rule {
     open-floating true
 }
 
+window-rule {
+    match app-id=r#"steam"#
+
+    open-on-workspace "games"
+}
+
+window-rule {
+    match app-id=r#"steam"# title="Steam"
+
+    open-maximized true
+}
