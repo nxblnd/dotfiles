@@ -19,6 +19,7 @@ include "windows.kdl"
 spawn-at-startup "waybar"
 spawn-at-startup "dunst"
 spawn-at-startup "swaybg" "--image" "/usr/share/wallpapers/Nuvole/contents/images/5120x2880.png"
+spawn-sh-at-startup "vicinae server"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
