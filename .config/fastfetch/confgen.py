@@ -11,7 +11,7 @@ class Node:
     additional_entries: Optional[dict[str, type[Any]]]
     font_effect: Optional[str]
     neighbour_branches: str
-    children: list["Node"] = []
+    children: list["Node"]
 
     def __init__(self, module, key, format=None, additional_entries=None, text=None, font_effect=None):
         self.module = module
@@ -20,6 +20,7 @@ class Node:
         self.text = text
         self.additional_entries = additional_entries
         self.font_effect = font_effect
+        self.children = []
 
     def __str__(self) -> str:
         return str(self.construct_fastfetch_description())
