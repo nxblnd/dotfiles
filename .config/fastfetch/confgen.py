@@ -74,6 +74,13 @@ class Node:
         self.children += nodes
         return self
 
+    def remove_module(self, module):
+        for i, node in enumerate(self.children):
+            if node.module == module:
+                del self.children[i]
+                return
+            node.remove_module(module)
+
 
 schema = {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json"
@@ -194,7 +201,7 @@ roots = [
         modules["uptime"],
         modules["os_age"],
         modules["version"],
-    ),
+    )
 ]
 
 modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
@@ -210,5 +217,12 @@ with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp
 
 fastfetch_data = json.loads(fastfetch_response.stdout)
 
-print(json.dumps(fastfetch_data, indent=2))
+skip_modules = ["Custom"]
+for response_object in fastfetch_data:
+    if response_object.get("error") and response_object.get("type") not in skip_modules or response_object.get("result") == []:
+        for root in roots:
+            root.remove_module(response_object.get("type").lower())
 
+modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
+
+print(json.dumps(modules))
