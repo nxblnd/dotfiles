@@ -67,26 +67,20 @@ class Node:
 
         return module | key | format | text | additional_entries
 
-    def collect_branch(self):
+    def collect_branch(self) -> list[dict]:
         return [self.construct_module()] + [node.collect_branch() for node in self.children]
 
     def add_children(self, *nodes: type["Node"]) -> type["Node"]:
         self.children += nodes
         return self
 
-    def remove_module(self, module):
+    def remove_module(self, module) -> None:
         for i, node in enumerate(self.children):
             if node.module == module:
                 del self.children[i]
                 return
             node.remove_module(module)
 
-
-schema = {
-    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json"
-}
-
-logo = {"padding": {"left": 3, "right": 3, "top": 3}}
 
 font_effects = {
     "reset": "#0",
@@ -204,25 +198,37 @@ roots = [
     )
 ]
 
-modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
 
-with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp_config:
-    json.dump(schema | logo | modules, tmp_config)
-    tmp_config.flush()
+def build_config(roots) -> dict[str, type[Any]]:
+    schema = {
+        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json"
+    }
 
-    fastfetch_response = subprocess.run(
-        ["fastfetch", "--config", tmp_config.name, "--json"],
-        capture_output=True
-    )
+    logo = {"padding": {"left": 3, "right": 3, "top": 3}}
 
-fastfetch_data = json.loads(fastfetch_response.stdout)
+    modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
 
-skip_modules = ["Custom"]
-for response_object in fastfetch_data:
-    if response_object.get("error") and response_object.get("type") not in skip_modules or response_object.get("result") == []:
-        for root in roots:
-            root.remove_module(response_object.get("type").lower())
+    return schema | logo | modules
 
-modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
 
-print(json.dumps(modules))
+def get_test_response() -> list[dict]:
+    with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp_config:
+        json.dump(build_config(roots), tmp_config)
+        tmp_config.flush()
+
+        fastfetch_response = subprocess.run(
+            ["fastfetch", "--config", tmp_config.name, "--json"],
+            capture_output=True
+        )
+
+    return json.loads(fastfetch_response.stdout)
+
+
+def filter_roots(roots) -> list[Node]:
+    skip_modules = ["Custom"]
+    for response_object in get_test_response():
+        if response_object.get("error") and response_object.get("type") not in skip_modules or response_object.get("result") == []:
+            for root in roots:
+                root.remove_module(response_object.get("type").lower())
+    return roots
+
