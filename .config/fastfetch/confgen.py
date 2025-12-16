@@ -199,7 +199,7 @@ roots = [
 ]
 
 
-def build_config(roots) -> dict[str, type[Any]]:
+def build_config(roots: list[Node]) -> dict[str, type[Any]]:
     schema = {
         "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json"
     }
@@ -211,9 +211,9 @@ def build_config(roots) -> dict[str, type[Any]]:
     return schema | logo | modules
 
 
-def get_test_response() -> list[dict]:
+def get_test_response(config: dict[str, type[Any]]) -> list[dict]:
     with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp_config:
-        json.dump(build_config(roots), tmp_config)
+        json.dump(config, tmp_config)
         tmp_config.flush()
 
         fastfetch_response = subprocess.run(
@@ -224,11 +224,22 @@ def get_test_response() -> list[dict]:
     return json.loads(fastfetch_response.stdout)
 
 
-def filter_roots(roots) -> list[Node]:
+def filter_roots(roots: list[Node], data: list[dict]) -> list[Node]:
     skip_modules = ["Custom"]
-    for response_object in get_test_response():
+    for response_object in data:
         if response_object.get("error") and response_object.get("type") not in skip_modules or response_object.get("result") == []:
             for root in roots:
                 root.remove_module(response_object.get("type").lower())
     return roots
 
+
+def main():
+    test_config = build_config(roots)
+    test_data = get_test_response(test_config)
+    filtered_roots = filter_roots(roots, test_data)
+    final_config = build_config(filtered_roots)
+    print(json.dumps(final_config))
+
+
+if __name__ == '__main__':
+    main()
