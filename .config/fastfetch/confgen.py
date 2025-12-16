@@ -35,12 +35,12 @@ class Node:
         key = {"key": f"{{{font_effect}}} {self.key}"}
 
         if self.format:
-            format = self.format
+            format = {"format": self.format}
         else:
             format = {}
 
         if self.text:
-            text = self.text
+            text = {"text": self.text}
         else:
             text = {}
 
@@ -52,8 +52,9 @@ class Node:
         return module | key | format | text | additional_entries
 
     def add_children(self, *nodes: type["Node"]):
-        for node in nodes:
-            self.children.append(node)
+        self.children += nodes
+
+
 
 
 schema = {
