@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Optional
+from typing import Optional, Any
 
 
 class Node:
@@ -8,15 +8,17 @@ class Node:
     key: str
     format: Optional[str]
     text: Optional[str]
+    additional_entries: Optional[dict[str, type[Any]]]
     font_effect: Optional[str]
     neighbour_branches: str
     children: list["Node"] = []
 
-    def __init__(self, module, key, format=None, text=None, font_effect=None):
+    def __init__(self, module, key, format=None, additional_entries=None, text=None, font_effect=None):
         self.module = module
         self.key = key
         self.format = format
         self.text = text
+        self.additional_entries = additional_entries
         self.font_effect = font_effect
 
     def __str__(self) -> str:
@@ -42,7 +44,12 @@ class Node:
         else:
             text = {}
 
-        return module | key | format | text
+        if self.additional_entries:
+            additional_entries = self.additional_entries
+        else:
+            additional_entries = {}
+
+        return module | key | format | text | additional_entries
 
     def add_children(self, *nodes: type["Node"]):
         for node in nodes:
@@ -77,8 +84,95 @@ graphics = {
 modules = {
     "software_root": Node("custom", "Software", font_effect=font_effects["software"]),
     "os": Node("os", "OS"),
+    "bootmgr": Node("bootmgr", "Boot", format="{name}"),
+    "init": Node("initsystem", "Init"),
+    "kernel": Node("kernel", "Kernel"),
+    "lm": Node("lm", "LM"),
+    "packages": Node("packages", "Packages"),
+    "terminal": Node("terminal", "Terminal", font_effect=font_effects["terminal"]),
+    "terminal_font": Node("terminalfont", "Font"),
+    "shell": Node("shell", "Shell"),
+    "graphics": Node("custom", "Graphics", font_effect=font_effects["graphics"]),
+    "de": Node("de", "DE"),
+    "wm": Node("wm", "WM"),
+    "icons": Node("icons", "Icons"),
+    "cursor": Node("cursor", "Cursor"),
+    "font": Node("font", "Font"),
+    "theme": Node("theme", "Theme"),
+    "development": Node("custom", "Development", font_effect=font_effects["development"]),
+    "editor": Node("editor", "Editor"),
+    "git": Node("command", "Git", text="git --version", format="{~12}"),
+    "python": Node("command", "Python", text="python --version", format="{~7}"),
+    "gcc": Node("command", "GCC", text="gcc --version | head -1 | cut -d ' ' -f 3", format="{}"),
+    "clang": Node("command", "Clang", text="clang --version | head -1 | cut -d ' ' -f 3", format="{}"),
+    "nodejs": Node("command", "NodeJS", text="node --version", format="{}"),
+    "hardware_root": Node("custom", "Hardware", font_effect=font_effects["hardware"]),
+    "chassis": Node("chassis", "Chassis"),
+    "host": Node("host", "Host", format="{vendor} {name}"),
+    "board": Node("board", "Board"),
+    "bios": Node("bios", "BIOS", format="[{type}] {vendor} {version}"),
+    "cpu": Node("cpu", "CPU"),
+    "cpu_cache": Node("cpucache", "CPU Cache"),
+    "gpu": Node("gpu", "GPU", format="[{type}] {vendor} {name}"),
+    "gpu_driver": Node("gpu", "Driver", format="{driver}"),
+    "disk": Node("disk", "Disk"),
+    "ram": Node("memory", "RAM"),
+    "swap": Node("swap", "Swap"),
+    "battery": Node("battery", "Battery"),
+    "display": Node("display", "Display"),
+    "misc_root": Node("custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]),
+    "datetime": Node("datetime", "Date & Time"),
+    "uptime": Node("uptime", "Uptime"),
+    "os_age": Node("disk", "OS age", format="{days} days (since {create-time:10})", additional_entries={"folders": "/"}),
+    "media": Node("media", "Now playing"),
+    "version": Node("version", "Fastfetch", format="{version}"),
 }
 
-modules["software_root"].add_children(modules["os"])
+modules["software_root"].add_children(
+    modules["os"].add_children(
+        modules["bootmgr"],
+        modules["init"],
+        modules["kernel"],
+        modules["lm"],
+        modules["packages"],
+    ),
+    modules["terminal"].add_children(
+        modules["shell"],
+        modules["terminal_font"],
+    ),
+    modules["graphics"].add_children(
+        modules["de"],
+        modules["wm"],
+        modules["icons"],
+        modules["cursor"],
+        modules["font"],
+        modules["theme"],
+    ),
+    modules["development"].add_children(
+        modules["editor"],
+        modules["git"],
+        modules["python"],
+        modules["gcc"],
+        modules["clang"],
+        modules["nodejs"],
+    ),
+)
 
-print(modules["software_root"])
+modules["hardware_root"].add_children(
+    modules["chassis"].add_children(
+        modules["host"],
+        modules["board"].add_children(modules["bios"]),
+        modules["cpu"].add_children(modules["cpu_cache"]),
+        modules["gpu"].add_children(modules["gpu_driver"]),
+        modules["disk"],
+        modules["ram"].add_children(modules["swap"]),
+    ),
+    modules["display"]
+)
+
+modules["misc_root"].add_children(
+    modules["datetime"],
+    modules["uptime"],
+    modules["os_age"],
+    modules["version"],
+)
