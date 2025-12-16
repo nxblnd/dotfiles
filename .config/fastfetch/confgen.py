@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 
-from typing import Optional, Any
+from typing import Optional, Any, Iterator
+
+
+def flatten(obj) -> Iterator[Any]:
+    for value in obj:
+        if isinstance(value, list):
+            yield from flatten(value)
+        else:
+            yield value
 
 
 class Node:
@@ -23,17 +31,21 @@ class Node:
         self.children = []
 
     def __str__(self) -> str:
-        return str(self.construct_fastfetch_description())
+        return f'Node {self.construct_module()}, children: {self.children}'
 
-    def construct_fastfetch_description(self) -> dict[str, str]:
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def construct_module(self) -> dict[str, type[Any]]:
 
         module = {"type": self.module}
 
-        if self.font_effect:
-            font_effect = self.font_effect
-        else:
-            font_effect = font_effects["reset"]
-        key = {"key": f"{{{font_effect}}} {self.key}"}
+        # if self.font_effect:
+        #     font_effect = self.font_effect
+        # else:
+        #     font_effect = font_effects["reset"]
+        # key = {"key": f"{{{font_effect}}} {self.key}"}
+        key = {"key": self.key}
 
         if self.format:
             format = {"format": self.format}
@@ -52,10 +64,12 @@ class Node:
 
         return module | key | format | text | additional_entries
 
-    def add_children(self, *nodes: type["Node"]):
+    def collect_branch(self):
+        return [self.construct_module()] + [node.collect_branch() for node in self.children]
+
+    def add_children(self, *nodes: type["Node"]) -> type["Node"]:
         self.children += nodes
-
-
+        return self
 
 
 schema = {
@@ -130,51 +144,54 @@ modules = {
     "version": Node("version", "Fastfetch", format="{version}"),
 }
 
-modules["software_root"].add_children(
-    modules["os"].add_children(
-        modules["bootmgr"],
-        modules["init"],
-        modules["kernel"],
-        modules["lm"],
-        modules["packages"],
+roots = [
+    modules["software_root"].add_children(
+        modules["os"].add_children(
+            modules["bootmgr"],
+            modules["init"],
+            modules["kernel"],
+            modules["lm"],
+            modules["packages"],
+        ),
+        modules["terminal"].add_children(
+            modules["shell"],
+            modules["terminal_font"],
+        ),
+        modules["graphics"].add_children(
+            modules["de"],
+            modules["wm"],
+            modules["icons"],
+            modules["cursor"],
+            modules["font"],
+            modules["theme"],
+        ),
+        modules["development"].add_children(
+            modules["editor"],
+            modules["git"],
+            modules["python"],
+            modules["gcc"],
+            modules["clang"],
+            modules["nodejs"],
+        ),
     ),
-    modules["terminal"].add_children(
-        modules["shell"],
-        modules["terminal_font"],
+    modules["hardware_root"].add_children(
+        modules["chassis"].add_children(
+            modules["host"],
+            modules["board"].add_children(modules["bios"]),
+            modules["cpu"].add_children(modules["cpu_cache"]),
+            modules["gpu"].add_children(modules["gpu_driver"]),
+            modules["disk"],
+            modules["ram"].add_children(modules["swap"]),
+        ),
+        modules["display"]
     ),
-    modules["graphics"].add_children(
-        modules["de"],
-        modules["wm"],
-        modules["icons"],
-        modules["cursor"],
-        modules["font"],
-        modules["theme"],
+    modules["misc_root"].add_children(
+        modules["datetime"],
+        modules["uptime"],
+        modules["os_age"],
+        modules["version"],
     ),
-    modules["development"].add_children(
-        modules["editor"],
-        modules["git"],
-        modules["python"],
-        modules["gcc"],
-        modules["clang"],
-        modules["nodejs"],
-    ),
-)
+]
 
-modules["hardware_root"].add_children(
-    modules["chassis"].add_children(
-        modules["host"],
-        modules["board"].add_children(modules["bios"]),
-        modules["cpu"].add_children(modules["cpu_cache"]),
-        modules["gpu"].add_children(modules["gpu_driver"]),
-        modules["disk"],
-        modules["ram"].add_children(modules["swap"]),
-    ),
-    modules["display"]
-)
 
-modules["misc_root"].add_children(
-    modules["datetime"],
-    modules["uptime"],
-    modules["os_age"],
-    modules["version"],
-)
+modules = [flatten(root.collect_branch()) for root in roots]
