@@ -1,0 +1,4 @@
+timeout 300 'loginctl lock-session'
+timeout 3600 'systemctl suspend'
+before-sleep 'hyprlock --grace 5'
+lock 'hyprlock'

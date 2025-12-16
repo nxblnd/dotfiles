@@ -1,0 +1,69 @@
+workspace "main"
+workspace "games"
+
+// Window rules let you adjust behavior for individual windows.
+// Find more information on the wiki:
+// https://yalter.github.io/niri/Configuration:-Window-Rules
+
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
+
+// Open the Firefox picture-in-picture player as floating by default.
+window-rule {
+    // This app-id regular expression will work for both:
+    // - host Firefox (app-id is "firefox")
+    // - Flatpak Firefox (app-id is "org.mozilla.firefox")
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+
+    open-floating true
+    default-floating-position x=32 y=32 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id=r#"firefox"# title="Choose User Profile"
+
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+
+    block-out-from "screen-capture"
+}
+
+window-rule {
+    match app-id=r#"^org\.telegram\.desktop$"#
+    exclude app-id=r#"^org\.telegram\.desktop$"# title="Media viewer"
+
+    default-column-width {
+        fixed 900
+    }
+}
+
+window-rule {
+    match app-id=r#"^org\.telegram\.desktop$"# title="Media viewer"
+
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"steam"#
+
+    open-on-workspace "games"
+}
+
+window-rule {
+    match app-id=r#"steam"# title="Steam"
+
+    open-maximized true
+}
+
+window-rule {
+    match app-id=r#"steam"# title="Friends List"
+
+    default-column-width {
+        fixed 500
+    }
+}
