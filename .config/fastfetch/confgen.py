@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 from typing import Optional, Any, Iterator
+import json
+from tempfile import NamedTemporaryFile
+import subprocess
 
 
 def flatten(obj) -> Iterator[Any]:
@@ -182,6 +185,7 @@ roots = [
             modules["gpu"].add_children(modules["gpu_driver"]),
             modules["disk"],
             modules["ram"].add_children(modules["swap"]),
+            modules["battery"],
         ),
         modules["display"]
     ),
@@ -193,5 +197,18 @@ roots = [
     ),
 ]
 
+modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
 
-modules = [flatten(root.collect_branch()) for root in roots]
+with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp_config:
+    json.dump(schema | logo | modules, tmp_config)
+    tmp_config.flush()
+
+    fastfetch_response = subprocess.run(
+        ["fastfetch", "--config", tmp_config.name, "--json"],
+        capture_output=True
+    )
+
+fastfetch_data = json.loads(fastfetch_response.stdout)
+
+print(json.dumps(fastfetch_data, indent=2))
+
