@@ -17,7 +17,7 @@ def flatten(obj) -> Iterator[Any]:
 
 class Node:
     module: str
-    key: str
+    key: Optional[str]
     format: Optional[str]
     text: Optional[str]
     additional_entries: Optional[dict[str, type[Any]]]
@@ -27,7 +27,7 @@ class Node:
     def __init__(
         self,
         module,
-        key,
+        key=None,
         format=None,
         additional_entries=None,
         text=None,
@@ -50,7 +50,7 @@ class Node:
     def construct_module(self) -> dict[str, type[Any]]:
 
         module = {"type": self.module}
-        key = {"key": self.key}
+        key = {"key": self.key} if self.key else {}
         format = {"format": self.format} if self.format else {}
         text = {"text": self.text} if self.text else {}
         additional_entries = self.additional_entries if self.additional_entries else {}
@@ -134,6 +134,8 @@ graphics = {
 }
 
 modules = {
+    "break": Node("break"),
+    "colors": Node("colors", additional_entries={"symbol": "star"}),
     "software_root": Node("custom", "Software", font_effect=font_effects["software"]),
     "os": Node("os", "OS", font_effect=font_effects["os"]),
     "bootmgr": Node("bootmgr", "Boot", format="{name}"),
@@ -245,6 +247,7 @@ roots = [
             modules["nodejs"],
         ),
     ),
+    modules["break"],
     modules["hardware_root"].add_children(
         modules["chassis"].add_children(
             modules["host"],
@@ -262,6 +265,7 @@ roots = [
             modules["gamepad"],
         ),
     ),
+    modules["break"],
     modules["network_root"].add_children(
         modules["bluetooth"],
         modules["dns"],
@@ -269,6 +273,7 @@ roots = [
         # modules["public_ip"],
         modules["wifi"],
     ),
+    modules["break"],
     modules["misc_root"].add_children(
         modules["browser"],
         modules["datetime"],
@@ -276,6 +281,8 @@ roots = [
         modules["os_age"],
         modules["version"],
     ),
+    modules["break"],
+    modules["colors"],
 ]
 
 
