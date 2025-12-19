@@ -284,7 +284,7 @@ def build_config(roots: list[Node]) -> dict[str, type[Any]]:
         "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json"
     }
 
-    logo = {"padding": {"left": 3, "right": 3, "top": 3}}
+    logo = {"logo": {"padding": {"left": 3, "right": 3, "top": 3}}}
 
     modules = {"modules": list(flatten(root.collect_branch() for root in roots))}
 
