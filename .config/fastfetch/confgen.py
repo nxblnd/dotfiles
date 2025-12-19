@@ -316,7 +316,7 @@ def main():
     final_config = build_config(filtered_roots)
     fastfetch_config = Path.home() / ".config" / "fastfetch" / "config_generated.jsonc"
     with open(fastfetch_config, "w") as config_file:
-        json.dump(final_config, config_file)
+        json.dump(final_config, config_file, indent=2)
 
 
 if __name__ == "__main__":
