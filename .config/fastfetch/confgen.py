@@ -120,7 +120,7 @@ graphics = {
 
 modules = {
     "software_root": Node("custom", "Software", font_effect=font_effects["software"]),
-    "os": Node("os", "OS"),
+    "os": Node("os", "OS", font_effect=font_effects["os"]),
     "bootmgr": Node("bootmgr", "Boot", format="{name}"),
     "init": Node("initsystem", "Init"),
     "kernel": Node("kernel", "Kernel"),
@@ -144,7 +144,7 @@ modules = {
     "clang": Node("command", "Clang", text="clang --version | head -1 | cut -d ' ' -f 3", format="{}"),
     "nodejs": Node("command", "NodeJS", text="node --version", format="{}"),
     "hardware_root": Node("custom", "Hardware", font_effect=font_effects["hardware"]),
-    "chassis": Node("chassis", "Chassis"),
+    "chassis": Node("chassis", "Chassis", font_effect=font_effects["chassis"]),
     "host": Node("host", "Host", format="{vendor} {name}"),
     "board": Node("board", "Board"),
     "bios": Node("bios", "BIOS", format="[{type}] {vendor} {version}"),
