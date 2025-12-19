@@ -108,6 +108,7 @@ font_effects = {
     "development": fg(0, 255, 240),
     "hardware": fg(255, 255, 0),
     "chassis": fg(255, 180, 0),
+    "network": fg(0, 150, 255),
     "miscellaneous": fg(195, 120, 225),
 }
 
@@ -156,6 +157,7 @@ modules = {
     "ram": Node("memory", "RAM"),
     "swap": Node("swap", "Swap"),
     "battery": Node("battery", "Battery"),
+    "power_adapter": Node("poweradapter", "Power Adapter"),
     "display": Node("display", "Display"),
     "misc_root": Node("custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]),
     "datetime": Node("datetime", "Date & Time"),
@@ -163,6 +165,12 @@ modules = {
     "os_age": Node("disk", "OS age", format="{days} days (since {create-time:10})", additional_entries={"folders": "/"}),
     "media": Node("media", "Now playing"),
     "version": Node("version", "Fastfetch", format="{version}"),
+    "network_root": Node("custom", "Networks", font_effect=font_effects["network"]),
+    "bluetooth": Node("bluetoothradio", "Bluetooth"),
+    "dns": Node("dns", "DNS"),
+    "local_ip": Node("localIp", "Local IP"),
+    "public_ip": Node("publicIp", "Public IP"),
+    "wifi": Node("wifi", "Wi-Fi"),
 }
 
 roots = [
@@ -203,16 +211,23 @@ roots = [
             modules["gpu"].add_children(modules["gpu_driver"]),
             modules["disk"],
             modules["ram"].add_children(modules["swap"]),
-            modules["battery"],
+            modules["battery"].add_children(modules["power_adapter"]),
         ),
         modules["display"]
+    ),
+    modules["network_root"].add_children(
+        modules["bluetooth"],
+        modules["dns"],
+        modules["local_ip"],
+        # modules["public_ip"],
+        modules["wifi"],
     ),
     modules["misc_root"].add_children(
         modules["datetime"],
         modules["uptime"],
         modules["os_age"],
         modules["version"],
-    )
+    ),
 ]
 
 
