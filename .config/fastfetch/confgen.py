@@ -4,6 +4,7 @@ from typing import Optional, Any, Iterator
 import json
 from tempfile import NamedTemporaryFile
 import subprocess
+from pathlib import Path
 
 
 def flatten(obj) -> Iterator[Any]:
@@ -62,17 +63,28 @@ class Node:
                 return
             node.remove_module(module)
 
-    def prettify(self, font_effect=None, key_prefix="") -> None:
-        if key_prefix:
-            self.key = key_prefix + f'{graphics["hbar"]} ' + self.key
+    def prettify(self, font_effect="", key_prefix="") -> None:
         if self.font_effect:
             font_effect = self.font_effect
+            self.key = font_effect + self.key
+
+        if len(key_prefix):
+            self.key = key_prefix + f'{graphics["hbar"]} ' + self.key
+
+            if key_prefix[-1] == graphics["end"]:
+                key_prefix = key_prefix[:-1] + '   '
+            else:
+                key_prefix = key_prefix[:-1] + graphics["vbar"] + '  '
+
         for i, node in enumerate(self.children):
-            node.prettify(font_effect, key_prefix)
+            if i == len(self.children) - 1:
+                node.prettify(font_effect, key_prefix + font_effect + graphics["end"])
+            else:
+                node.prettify(font_effect, key_prefix + font_effect + graphics["branch"])
 
 
 font_effects = {
-    "reset": "#0",
+    "reset": "{#0}",
     "software": "\u001b[38;2;0;255;0m",
     "os": "\u001b[38;2;0;255;60m",
     "terminal": "\u001b[38;2;0;255;120m",
@@ -229,7 +241,9 @@ def main():
     for root in filtered_roots:
         root.prettify()
     final_config = build_config(filtered_roots)
-    print(json.dumps(final_config))
+    fastfetch_config = Path.home() / ".config" / "fastfetch" / "config_generated.jsonc"
+    with open(fastfetch_config, 'w') as config_file:
+        json.dump(final_config, config_file)
 
 
 if __name__ == '__main__':
