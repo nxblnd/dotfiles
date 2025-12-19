@@ -161,6 +161,7 @@ modules = {
     "display": Node("display", "Display"),
     "misc_root": Node("custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]),
     "datetime": Node("datetime", "Date & Time"),
+    "browser": Node("command", "Browser", text="eval $(cat /usr/share/applications/$(xdg-mime query default text/html) | grep -Eo 'Exec=([A-Za-z\\/]+)' | head -1 | cut -c 6- | { cat | tr -d '\n'; echo ' --version'; })"),
     "uptime": Node("uptime", "Uptime"),
     "os_age": Node("disk", "OS age", format="{days} days (since {create-time:10})", additional_entries={"folders": "/"}),
     "media": Node("media", "Now playing"),
@@ -223,6 +224,7 @@ roots = [
         modules["wifi"],
     ),
     modules["misc_root"].add_children(
+        modules["browser"],
         modules["datetime"],
         modules["uptime"],
         modules["os_age"],
