@@ -113,17 +113,17 @@ def fg(r, g, b):
 
 font_effects = {
     "reset": f"{CSI}{SGR}",
-    "software": fg(0, 255, 0),
-    "os": fg(0, 255, 60),
-    "terminal": fg(0, 255, 120),
-    "graphics": fg(0, 255, 180),
-    "development": fg(0, 255, 240),
-    "hardware": fg(255, 60, 0),
-    "chassis": fg(255, 120, 0),
-    "display": fg(255, 180, 0),
-    "input_devices": fg(255, 240, 0),
-    "network": fg(0, 150, 255),
-    "miscellaneous": fg(195, 120, 225),
+    "software": fg(255, 60, 0),
+    "os": fg(255, 120, 0),
+    "terminal": fg(255, 180, 0),
+    "graphics": fg(255, 240, 0),
+    "development": fg(180, 255, 0),
+    "hardware": fg(0, 255, 0),
+    "chassis": fg(0, 255, 60),
+    "display": fg(0, 255, 120),
+    "input_devices": fg(0, 255, 180),
+    "network": fg(0, 180, 255),
+    "miscellaneous": fg(180, 120, 240),
 }
 
 graphics = {
