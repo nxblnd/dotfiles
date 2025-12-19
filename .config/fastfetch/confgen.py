@@ -21,7 +21,6 @@ class Node:
     text: Optional[str]
     additional_entries: Optional[dict[str, type[Any]]]
     font_effect: Optional[str]
-    neighbour_branches: str
     children: list["Node"]
 
     def __init__(self, module, key, format=None, additional_entries=None, text=None, font_effect=None):
@@ -42,28 +41,10 @@ class Node:
     def construct_module(self) -> dict[str, type[Any]]:
 
         module = {"type": self.module}
-
-        # if self.font_effect:
-        #     font_effect = self.font_effect
-        # else:
-        #     font_effect = font_effects["reset"]
-        # key = {"key": f"{{{font_effect}}} {self.key}"}
         key = {"key": self.key}
-
-        if self.format:
-            format = {"format": self.format}
-        else:
-            format = {}
-
-        if self.text:
-            text = {"text": self.text}
-        else:
-            text = {}
-
-        if self.additional_entries:
-            additional_entries = self.additional_entries
-        else:
-            additional_entries = {}
+        format = {"format": self.format} if self.format else {}
+        text = {"text": self.text} if self.text else {}
+        additional_entries = self.additional_entries if self.additional_entries else {}
 
         return module | key | format | text | additional_entries
 
@@ -80,6 +61,14 @@ class Node:
                 del self.children[i]
                 return
             node.remove_module(module)
+
+    def prettify(self, font_effect=None, key_prefix="") -> None:
+        if key_prefix:
+            self.key = key_prefix + f'{graphics["hbar"]} ' + self.key
+        if self.font_effect:
+            font_effect = self.font_effect
+        for i, node in enumerate(self.children):
+            node.prettify(font_effect, key_prefix)
 
 
 font_effects = {
@@ -237,6 +226,8 @@ def main():
     test_config = build_config(roots)
     test_data = get_test_response(test_config)
     filtered_roots = filter_roots(roots, test_data)
+    for root in filtered_roots:
+        root.prettify()
     final_config = build_config(filtered_roots)
     print(json.dumps(final_config))
 
