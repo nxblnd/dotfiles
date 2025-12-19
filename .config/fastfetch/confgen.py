@@ -187,10 +187,10 @@ modules = {
     "browser": Node(
         "command",
         "Browser",
-        text="""eval $(
-            cat /usr/share/applications/$(xdg-mime query default text/html) |
-            grep -Eo 'Exec=([A-Za-z\\/]+)' |
-            head -1 | cut -c 6- | { cat | tr -d '\n'; echo ' --version'; })""",
+        text="eval $( \
+            cat /usr/share/applications/$(xdg-mime query default text/html) | \
+            grep -Eo 'Exec=([A-Za-z\\/]+)' | \
+            head -1 | cut -c 6- | { cat | tr -d '\n'; echo ' --version'; })",
     ),
     "uptime": Node("uptime", "Uptime"),
     "os_age": Node(
