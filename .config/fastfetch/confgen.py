@@ -180,6 +180,10 @@ modules = {
     "battery": Node("battery", "Battery"),
     "power_adapter": Node("poweradapter", "Power Adapter"),
     "display": Node("display", "Display"),
+    "input_devices": Node("custom", "Input devices"),
+    "keyboard": Node("keyboard", "Keyboard"),
+    "mouse": Node("mouse", "Mouse"),
+    "gamepad": Node("gamepad", "Gamepad"),
     "misc_root": Node(
         "custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]
     ),
@@ -250,6 +254,11 @@ roots = [
             modules["battery"].add_children(modules["power_adapter"]),
         ),
         modules["display"],
+        modules["input_devices"].add_children(
+            modules["keyboard"],
+            modules["mouse"],
+            modules["gamepad"],
+        ),
     ),
     modules["network_root"].add_children(
         modules["bluetooth"],
