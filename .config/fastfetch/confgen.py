@@ -66,7 +66,9 @@ class Node:
     def prettify(self, font_effect="", key_prefix="") -> None:
         if self.font_effect:
             font_effect = self.font_effect
-            self.key = font_effect + self.key
+
+            # bold for category roots
+            self.key = font_effect + BOLD_CODE + self.key
 
         if len(key_prefix):
             self.key = key_prefix + f'{graphics["hbar"]} ' + self.key
@@ -83,16 +85,30 @@ class Node:
                 node.prettify(font_effect, key_prefix + font_effect + graphics["branch"])
 
 
+CSI = '\033['
+SGR = 'm'
+BOLD = 1
+BOLD_CODE = f"{CSI}{BOLD}{SGR}"
+
+
+def fg(r, g, b):
+    FORE = 38
+    TRUE_COLOR = 2
+    THIN_COLOR = 22
+    thin_code = f"{CSI}{THIN_COLOR}{SGR}"
+    return f"{thin_code}{CSI}{FORE};{TRUE_COLOR};{r};{g};{b}{SGR}"
+
+
 font_effects = {
-    "reset": "{#0}",
-    "software": "\u001b[38;2;0;255;0m",
-    "os": "\u001b[38;2;0;255;60m",
-    "terminal": "\u001b[38;2;0;255;120m",
-    "graphics": "\u001b[38;2;0;255;180m",
-    "development": "\u001b[38;2;0;255;240m",
-    "hardware": "\u001b[38;2;255;255;0m",
-    "chassis": "\u001b[38;2;255;180;0m",
-    "miscellaneous": "\u001b[38;2;195;120;225m",
+    "reset": f"{CSI}{SGR}",
+    "software": fg(0, 255, 0),
+    "os": fg(0, 255, 60),
+    "terminal": fg(0, 255, 120),
+    "graphics": fg(0, 255, 180),
+    "development": fg(0, 255, 240),
+    "hardware": fg(255, 255, 0),
+    "chassis": fg(255, 180, 0),
+    "miscellaneous": fg(195, 120, 225),
 }
 
 graphics = {
