@@ -149,7 +149,7 @@ modules = {
     "board": Node("board", "Board"),
     "bios": Node("bios", "BIOS", format="[{type}] {vendor} {version}"),
     "cpu": Node("cpu", "CPU"),
-    "cpu_cache": Node("cpucache", "CPU Cache"),
+    "cpu_cache": Node("cpucache", "CPU Cache", format="{result}"),
     "gpu": Node("gpu", "GPU", format="[{type}] {vendor} {name}"),
     "gpu_driver": Node("gpu", "Driver", format="{driver}"),
     "disk": Node("disk", "Disk"),
@@ -199,7 +199,7 @@ roots = [
         modules["chassis"].add_children(
             modules["host"],
             modules["board"].add_children(modules["bios"]),
-            modules["cpu"].add_children(modules["cpu_cache"]),
+            modules["cpu"],
             modules["gpu"].add_children(modules["gpu_driver"]),
             modules["disk"],
             modules["ram"].add_children(modules["swap"]),
