@@ -24,7 +24,15 @@ class Node:
     font_effect: Optional[str]
     children: list["Node"]
 
-    def __init__(self, module, key, format=None, additional_entries=None, text=None, font_effect=None):
+    def __init__(
+        self,
+        module,
+        key,
+        format=None,
+        additional_entries=None,
+        text=None,
+        font_effect=None,
+    ):
         self.module = module
         self.key = key
         self.format = format
@@ -34,7 +42,7 @@ class Node:
         self.children = []
 
     def __str__(self) -> str:
-        return f'Node {self.construct_module()}, children: {self.children}'
+        return f"Node {self.construct_module()}, children: {self.children}"
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -50,7 +58,9 @@ class Node:
         return module | key | format | text | additional_entries
 
     def collect_branch(self) -> list[dict]:
-        return [self.construct_module()] + [node.collect_branch() for node in self.children]
+        return [self.construct_module()] + [
+            node.collect_branch() for node in self.children
+        ]
 
     def add_children(self, *nodes: type["Node"]) -> type["Node"]:
         self.children += nodes
@@ -74,19 +84,21 @@ class Node:
             self.key = key_prefix + f'{graphics["hbar"]} ' + self.key
 
             if key_prefix[-1] == graphics["end"]:
-                key_prefix = key_prefix[:-1] + '   '
+                key_prefix = key_prefix[:-1] + "   "
             else:
-                key_prefix = key_prefix[:-1] + graphics["vbar"] + '  '
+                key_prefix = key_prefix[:-1] + graphics["vbar"] + "  "
 
         for i, node in enumerate(self.children):
             if i == len(self.children) - 1:
                 node.prettify(font_effect, key_prefix + font_effect + graphics["end"])
             else:
-                node.prettify(font_effect, key_prefix + font_effect + graphics["branch"])
+                node.prettify(
+                    font_effect, key_prefix + font_effect + graphics["branch"]
+                )
 
 
-CSI = '\033['
-SGR = 'm'
+CSI = "\033["
+SGR = "m"
 BOLD = 1
 BOLD_CODE = f"{CSI}{BOLD}{SGR}"
 
@@ -137,12 +149,21 @@ modules = {
     "cursor": Node("cursor", "Cursor"),
     "font": Node("font", "Font"),
     "theme": Node("theme", "Theme"),
-    "development": Node("custom", "Development", font_effect=font_effects["development"]),
+    "development": Node(
+        "custom", "Development", font_effect=font_effects["development"]
+    ),
     "editor": Node("editor", "Editor"),
     "git": Node("command", "Git", text="git --version", format="{~12}"),
     "python": Node("command", "Python", text="python --version", format="{~7}"),
-    "gcc": Node("command", "GCC", text="gcc --version | head -1 | cut -d ' ' -f 3", format="{}"),
-    "clang": Node("command", "Clang", text="clang --version | head -1 | cut -d ' ' -f 3", format="{}"),
+    "gcc": Node(
+        "command", "GCC", text="gcc --version | head -1 | cut -d ' ' -f 3", format="{}"
+    ),
+    "clang": Node(
+        "command",
+        "Clang",
+        text="clang --version | head -1 | cut -d ' ' -f 3",
+        format="{}",
+    ),
     "nodejs": Node("command", "NodeJS", text="node --version", format="{}"),
     "hardware_root": Node("custom", "Hardware", font_effect=font_effects["hardware"]),
     "chassis": Node("chassis", "Chassis", font_effect=font_effects["chassis"]),
@@ -159,11 +180,25 @@ modules = {
     "battery": Node("battery", "Battery"),
     "power_adapter": Node("poweradapter", "Power Adapter"),
     "display": Node("display", "Display"),
-    "misc_root": Node("custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]),
+    "misc_root": Node(
+        "custom", "Miscellaneous information", font_effect=font_effects["miscellaneous"]
+    ),
     "datetime": Node("datetime", "Date & Time"),
-    "browser": Node("command", "Browser", text="eval $(cat /usr/share/applications/$(xdg-mime query default text/html) | grep -Eo 'Exec=([A-Za-z\\/]+)' | head -1 | cut -c 6- | { cat | tr -d '\n'; echo ' --version'; })"),
+    "browser": Node(
+        "command",
+        "Browser",
+        text="""eval $(
+            cat /usr/share/applications/$(xdg-mime query default text/html) |
+            grep -Eo 'Exec=([A-Za-z\\/]+)' |
+            head -1 | cut -c 6- | { cat | tr -d '\n'; echo ' --version'; })""",
+    ),
     "uptime": Node("uptime", "Uptime"),
-    "os_age": Node("disk", "OS age", format="{days} days (since {create-time:10})", additional_entries={"folders": "/"}),
+    "os_age": Node(
+        "disk",
+        "OS age",
+        format="{days} days (since {create-time:10})",
+        additional_entries={"folders": "/"},
+    ),
     "media": Node("media", "Now playing"),
     "version": Node("version", "Fastfetch", format="{version}"),
     "network_root": Node("custom", "Networks", font_effect=font_effects["network"]),
@@ -214,7 +249,7 @@ roots = [
             modules["ram"].add_children(modules["swap"]),
             modules["battery"].add_children(modules["power_adapter"]),
         ),
-        modules["display"]
+        modules["display"],
     ),
     modules["network_root"].add_children(
         modules["bluetooth"],
@@ -246,13 +281,14 @@ def build_config(roots: list[Node]) -> dict[str, type[Any]]:
 
 
 def get_test_response(config: dict[str, type[Any]]) -> list[dict]:
-    with NamedTemporaryFile(mode='w', delete_on_close=False, suffix=".jsonc") as tmp_config:
+    with NamedTemporaryFile(
+        mode="w", delete_on_close=False, suffix=".jsonc"
+    ) as tmp_config:
         json.dump(config, tmp_config)
         tmp_config.flush()
 
         fastfetch_response = subprocess.run(
-            ["fastfetch", "--config", tmp_config.name, "--json"],
-            capture_output=True
+            ["fastfetch", "--config", tmp_config.name, "--json"], capture_output=True
         )
 
     return json.loads(fastfetch_response.stdout)
@@ -261,7 +297,11 @@ def get_test_response(config: dict[str, type[Any]]) -> list[dict]:
 def filter_roots(roots: list[Node], data: list[dict]) -> list[Node]:
     skip_modules = ["Custom"]
     for response_object in data:
-        if response_object.get("error") and response_object.get("type") not in skip_modules or response_object.get("result") == []:
+        if (
+            response_object.get("error")
+            and response_object.get("type") not in skip_modules
+            or response_object.get("result") == []
+        ):
             for root in roots:
                 root.remove_module(response_object.get("type").lower())
     return roots
@@ -275,9 +315,9 @@ def main():
         root.prettify()
     final_config = build_config(filtered_roots)
     fastfetch_config = Path.home() / ".config" / "fastfetch" / "config_generated.jsonc"
-    with open(fastfetch_config, 'w') as config_file:
+    with open(fastfetch_config, "w") as config_file:
         json.dump(final_config, config_file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
