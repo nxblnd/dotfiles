@@ -1,4 +1,5 @@
 workspace "main"
+workspace "browser"
 workspace "games"
 
 // Window rules let you adjust behavior for individual windows.
@@ -8,6 +9,12 @@ workspace "games"
 window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
+}
+
+window-rule {
+    match app-id=r#"firefox$"#
+
+    open-maximized true
 }
 
 // Open the Firefox picture-in-picture player as floating by default.
