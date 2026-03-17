@@ -16,3 +16,8 @@ function goto
 
     mkdir -p $argv[1] && cd $argv[1]
 end
+
+function gitinit
+    git init
+    git commit -m "Initial commit" --allow-empty
+end
