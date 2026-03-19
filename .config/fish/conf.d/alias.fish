@@ -17,7 +17,13 @@ function goto
     mkdir -p $argv[1] && cd $argv[1]
 end
 
-function gitinit
+function gitinit -a name
+    if test -z "$name"
+        set name "./"
+    end
+
+    goto $name
+
     git init
     git commit -m "Initial commit" --allow-empty
 end
