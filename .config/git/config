@@ -42,6 +42,8 @@
     required = true
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
+[alias]
+    prettylog = log --all --oneline --graph --date human
 [url "git@github.com:"]
     insteadOf = "gh:"
     pushInsteadOf = "https://github.com/"

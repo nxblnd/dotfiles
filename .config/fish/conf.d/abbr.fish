@@ -5,6 +5,8 @@ abbr --add dotfiles "git --git-dir=\"$HOME/.config/dotfiles/\" --work-tree=\"$HO
 abbr --add gs "git status"
 abbr --add ga "git add"
 abbr --add gco "git checkout"
+abbr --add gl "git log"
+abbr --add gpl "git prettylog"
 
 # Added proxy flags
 if type -q sslocal
