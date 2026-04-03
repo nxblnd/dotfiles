@@ -27,3 +27,9 @@ function gitinit -a name
     git init
     git commit -m "Initial commit" --allow-empty
 end
+
+function weather -a location
+    set no_follow "F"
+
+    curl --get --data "$no_follow" "wttr.in/$location"
+end
