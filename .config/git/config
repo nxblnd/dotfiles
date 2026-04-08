@@ -44,6 +44,11 @@
     smudge = git-lfs smudge -- %f
 [alias]
     prettylog = log --all --oneline --graph --date human
+    create = !git_helper init $1
+    churn = !git_helper churn
+    contributors = shortlog --numbered --summary --no-merges
+    velocity = !git_helper velocity
+    buggy-files = !git_helper buggy-files
 [url "git@github.com:"]
     insteadOf = "gh:"
     pushInsteadOf = "https://github.com/"
