@@ -14,7 +14,9 @@ end
 function install_scripts
     prepare_directories
 
-    for script in "$LOCAL_SCRIPTS"/*
+    for script in "$LOCAL_SCRIPTS"/**/*
+        test ! -f "$script" && continue
+
         if string match -q "#!*" (head -n1 "$script")
             string match -rq '^(?<filename>.*)(?<ext>\.[^.]*)$' (basename "$script")
             set symlink "$LOCAL_BIN/$filename"
