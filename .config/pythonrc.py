@@ -9,6 +9,7 @@ _auto_imports = [
     {"name": "tempfile", "module": "tempfile"},
     {"name": "subprocess", "module": "subprocess"},
     {"name": "json", "module": "json"},
+    {"name": "math", "module": "math"},
 ]
 
 def _autoimport():
